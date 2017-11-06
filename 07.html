@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>使用render函数模拟聊天场景</title>
+</head>
+<body>
+  <div id="App">
+     <ele></ele>
+  </div>
+  <script src='https://unpkg.com/vue/dist/vue.min.js'></script>
+  <script>
+    Vue.component('ele',{
+      render:function(createElement) {
+          var _this=this;
+          //渲染聊天内容列表
+          if(this.list.length) {
+              var listNode = createElement('ul',this.list.map(function(item) {
+                return createElement('li',item);
+
+              }));
+
+          }else{
+            var listNode=createElement('p','暂无聊天记录');
+          }
+          return createElement('div', [
+            listNode,
+            createElement('input',{
+              attrs:{
+                placeholder:'输入内容，按回车键发送'
+              },
+              style:{
+                width:'200px'
+              },
+              on:{
+                keyup:function (event) {
+                  //如果不是回车键。不发送数据
+                  if(event.keyCode!==13)
+                    return;
+                  //添加输入的内容到聊天列表
+                  _this.list.push(event.target.value);
+                  //发送后，清空输入框
+                  event.target.value='';
+                }
+              }
+            })
+            ])
+      },
+      data:function() {
+        return {
+          value:'',
+          list:[]
+        }
+      }
+    })
+      var App =new Vue({
+           el:'#App'
+      })
+  </script>
+</body>
+</html>
